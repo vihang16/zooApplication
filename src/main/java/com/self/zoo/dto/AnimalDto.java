@@ -3,10 +3,7 @@ package com.self.zoo.dto;
 import com.fasterxml.jackson.annotation.*;
 import com.self.zoo.entity.Favorite;
 import com.self.zoo.entity.Room;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -23,6 +20,7 @@ public class AnimalDto {
     String type;
     Long preference;
     @JsonManagedReference("animalFavoriteRoom")
+    @ToString.Exclude
     Set<FavoriteDto> favoriteRooms;
     @JsonBackReference("animalRoom")
     RoomDto room;

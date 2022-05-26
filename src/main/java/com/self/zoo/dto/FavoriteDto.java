@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -17,8 +14,10 @@ import lombok.experimental.FieldDefaults;
 public class FavoriteDto {
 
     @JsonBackReference("favoriteRoom")
+    @ToString.Exclude
     RoomDto roomDto;
     @JsonBackReference("animalFavoriteRoom")
+    @ToString.Exclude
     AnimalDto animalDto;
     Long id;
 }

@@ -3,6 +3,7 @@ package com.self.zoo.dto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -17,8 +18,10 @@ public class RoomDto {
     Long roomSize;
     LocalDateTime createdOn;
     @JsonManagedReference("favoriteRoom")
+    @ToString.Exclude
     Set<FavoriteDto> favorites;
     @JsonManagedReference("animalRoom")
+    @ToString.Exclude
     Set<AnimalDto> animals;
 
 }
