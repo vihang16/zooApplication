@@ -37,7 +37,7 @@ public class AnimalService {
     SourceToDestinationMapper mapper;
 
     FavoriteRepository favoriteRepository;
-/*
+
     @Transactional(readOnly = false)
     public AnimalDto add(AnimalDto animalDto) throws InvalidRoomDetailException {
         Animal animal = mapper.animalDtoToAnimal(animalDto);
@@ -128,9 +128,9 @@ public class AnimalService {
     public List<AnimalDto> findAnimalsWithoutRoom(String parameter, String defaultType) {
         List<Animal> animals = animalRepository.findByRoom(null, Sort.by(Sort.Direction.fromString(defaultType),parameter));
         return mapper.animalsToAnimalDtos(animals);
-    }*/
+    }
 
-    @Transactional(readOnly = false)
+    /*@Transactional(readOnly = false)
     public Animal add(Animal animal) throws InvalidRoomDetailException {
 
         isValidAnimal(animal);
@@ -222,5 +222,5 @@ public class AnimalService {
     public List<Animal> findAnimalsWithoutRoom(String parameter, String defaultType) {
         List<Animal> animals = animalRepository.findByRoom(null, Sort.by(Sort.Direction.fromString(defaultType),parameter));
         return animals;
-    }
+    }*/
 }

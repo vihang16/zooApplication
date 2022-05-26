@@ -48,7 +48,7 @@ class AnimalControllerTest {
 
     @BeforeEach
     public void setUp() throws InvalidRoomDetailException {
-        Animal response = new Animal();
+        AnimalDto response = new AnimalDto();
         response.setId(1l);
         when(animalService.add(any())).thenReturn(response);
     }

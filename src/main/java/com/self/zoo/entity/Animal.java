@@ -12,30 +12,25 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Animal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_animal_id")
     @SequenceGenerator(name = "seq_animal_id")
-    //@JsonView(Views.Public.class)
     Long id;
 
     @NotEmpty(message = "title should be given")
-    //@JsonView(Views.Public.class)
     String title;
 
     @CreatedDate
-    //@JsonView(Views.Public.class)
     LocalDateTime located;
 
-    //@JsonView(Views.Public.class)
     String type;
-    //@JsonView(Views.Public.class)
     Long preference;
 
     @OneToMany(mappedBy = "animal")

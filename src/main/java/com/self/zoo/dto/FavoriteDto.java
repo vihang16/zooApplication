@@ -16,7 +16,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 public class FavoriteDto {
 
+    @JsonBackReference("favoriteRoom")
     RoomDto roomDto;
+    @JsonBackReference("animalFavoriteRoom")
     AnimalDto animalDto;
     Long id;
 }

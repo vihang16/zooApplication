@@ -1,9 +1,6 @@
 package com.self.zoo.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.self.zoo.entity.Favorite;
 import com.self.zoo.entity.Room;
 import lombok.AccessLevel;
@@ -25,7 +22,9 @@ public class AnimalDto {
     LocalDateTime located;
     String type;
     Long preference;
+    @JsonManagedReference("animalFavoriteRoom")
     Set<FavoriteDto> favoriteRooms;
+    @JsonBackReference("animalRoom")
     RoomDto room;
 
 }

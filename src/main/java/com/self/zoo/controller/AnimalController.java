@@ -19,7 +19,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequestMapping("/animal")
 public class AnimalController {
-/*
+
     AnimalService animalService;
 
     @PostMapping("/add")
@@ -59,55 +59,12 @@ public class AnimalController {
     }
 
     @GetMapping("/noRoom/")
-    public List<AnimalDto> findAnimalsWithoutRoom(@RequestParam("parameter") Optional<String> sortingParamter, @RequestParam("by") Optional<String> by){
-        String parameter = sortingParamter.orElse("title");
-        String defaultType = by.orElse("asc");
-        return animalService.findAnimalsWithoutRoom(parameter, defaultType);
-    }*/
-
-    AnimalService animalService;
-
-    @PostMapping("/add")
-    public Animal addAnimal(@Valid @RequestBody Animal animalDto) throws InvalidRoomDetailException {
-        return animalService.add(animalDto);
+    public List<AnimalDto> findAnimalsWithoutRoom(@RequestParam("parameter") String sortingParamter, @RequestParam("by") String by){
+        sortingParamter = sortingParamter == null? "title":sortingParamter;
+        by = by == null? "asc":by;
+        return animalService.findAnimalsWithoutRoom(sortingParamter, by);
     }
 
-    @GetMapping
-    public List<Animal> getAllAnimals(){
-        return  animalService.getAllAnimals();
-    }
 
-    @GetMapping("/{id}")
-    public Animal getAnimalById(@PathVariable long id){
-        return animalService.getAnimalById(id);
-    }
-
-    @PutMapping("/{id}")
-    public Animal updateAnimal(@RequestBody Animal animalDto, @PathVariable Long id) throws InvalidRoomDetailException {
-        animalDto.setId(id);
-        return animalService.updateAnimal(animalDto);
-    }
-
-    @DeleteMapping("/remove/{id}")
-    public void removeAnimal(@PathVariable Long id){
-        animalService.removeAnimal(id);
-    }
-
-    @PatchMapping("/room/{id}")
-    public Animal updateRoom(@RequestBody RoomDto room, @PathVariable Long id){
-        return animalService.updateRoom(room, id);
-    }
-
-    @PatchMapping("/roomRemove/{id}")
-    public Animal removeAnimalFromRoom(@PathVariable Long id){
-        return animalService.removeAnimalFromRoom(id);
-    }
-
-    @GetMapping("/noRoom/")
-    public List<Animal> findAnimalsWithoutRoom(@RequestParam("parameter") Optional<String> sortingParamter, @RequestParam("by") Optional<String> by){
-        String parameter = sortingParamter.orElse("title");
-        String defaultType = by.orElse("asc");
-        return animalService.findAnimalsWithoutRoom(parameter, defaultType);
-    }
 
 }
