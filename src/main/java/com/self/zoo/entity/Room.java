@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity(name = "room")
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
@@ -19,7 +19,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_room_id")
-    @SequenceGenerator(name = "seq_room_id")
+    @SequenceGenerator(name = "seq_room_id",allocationSize = 1, initialValue = 3)
     Long id;
 
     String title;
@@ -35,7 +35,7 @@ public class Room {
     @EqualsAndHashCode.Exclude
     Set<Favorite> favorites;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     Set<Animal> animals;

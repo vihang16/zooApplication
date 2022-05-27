@@ -14,7 +14,6 @@ import org.mapstruct.MappingTarget;
 import java.util.*;
 
 @Mapper(componentModel = "spring")
-
 public interface SourceToDestinationMapper {
 
     //@Mapping(ignore = true, source = "room", target = "room")
@@ -34,10 +33,16 @@ public interface SourceToDestinationMapper {
         Set<Favorite> favorite1 = new HashSet<>();
         for(FavoriteDto favoriteDto: favoriteDtos){
             Favorite favoriteObj = new Favorite();
+            favoriteObj.setId(favoriteDto.getId());
             favoriteObj.setRooms(roomDtoToRoom(favoriteDto.getRoomDto()));
             favorite1.add(favoriteObj);
         }
         return favorite1;
     }
+
+  /*  @AfterMapping
+    default void afterMappingAnimalDtoTOAnimal(@MappingTarget Animal animal, AnimalDto animalDto){
+        animal.setRoom(roomDtoToRoom(animalDto.getRoomDto()));
+    }*/
 
 }

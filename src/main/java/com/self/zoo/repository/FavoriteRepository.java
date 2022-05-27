@@ -1,11 +1,13 @@
 package com.self.zoo.repository;
 
 import com.self.zoo.entity.Favorite;
+import com.self.zoo.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-    public Optional<Favorite> findByAnimalId(Long id);
+     List<Favorite> findByAnimalId(Long id);
+     List<Favorite> findByRooms(Room room);
 }

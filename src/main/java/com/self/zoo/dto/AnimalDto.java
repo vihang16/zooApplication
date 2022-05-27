@@ -22,7 +22,7 @@ public class AnimalDto {
     @JsonManagedReference("animalFavoriteRoom")
     @ToString.Exclude
     Set<FavoriteDto> favoriteRooms;
-    @JsonBackReference("animalRoom")
-    RoomDto room;
+    //@JsonBackReference("animalRoom")
+    RoomDto roomDto;
 
 }

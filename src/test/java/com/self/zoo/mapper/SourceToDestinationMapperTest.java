@@ -20,7 +20,7 @@ class SourceToDestinationMapperTest {
     @Test
     void animalToAnimalDto() {
         Animal a = new Animal();
-        a.setId(1l);
+        a.setId(1L);
         a.setPreference(25l);
         a.setTitle("Dog");
         a.setType("<=");
@@ -28,7 +28,7 @@ class SourceToDestinationMapperTest {
         r.setTitle("pink");
         a.setRoom(r);
         AnimalDto animalDto =  mapper.animalToAnimalDto(a);
-        assertEquals(animalDto.getRoom().getTitle(), a.getRoom().getTitle());
+        assertEquals(animalDto.getRoomDto().getTitle(), a.getRoom().getTitle());
         assertEquals(animalDto.getTitle(), a.getTitle());
         assertEquals(animalDto.getId(), a.getId());
     }

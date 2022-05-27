@@ -38,16 +38,38 @@ public class AnimalService {
 
     FavoriteRepository favoriteRepository;
 
-    @Transactional(readOnly = false)
+    @Transactional
     public AnimalDto add(AnimalDto animalDto) throws InvalidRoomDetailException {
         Animal animal = mapper.animalDtoToAnimal(animalDto);
         isValidAnimal(animal);
         animal = animalRepository.save(animal);
         log.debug("animal object saved:",animal);
         List<Favorite> favoriteRoom = addFavortieRoom(animalDto, animal);
+        if(animalDto.getRoomDto() != null) {
+            Room room = addAnimalToRoom(animal, animalDto);
+            animal.setRoom(room);
+            animal = animalRepository.save(animal);
+        }
+
+        //animal = animalRepository.save(animal);
         if(favoriteRoom != null)
            animal.setFavoriteRooms(new HashSet<>(favoriteRoom));
         return mapper.animalToAnimalDto(animal);
+    }
+
+    private Room addAnimalToRoom(Animal animal, AnimalDto animalDto) throws InvalidRoomDetailException {
+        Room  room =  mapper.roomDtoToRoom(animalDto.getRoomDto());
+        Optional<Room> optionalRoom = roomRepository.findById(room.getId());
+        if(optionalRoom.isPresent()){
+          room = optionalRoom.get();
+          Set<Animal> animals=  room.getAnimals();
+          animals.add(animal);
+          //room.setAnimals(animals);
+          roomRepository.save(room);
+        }else{
+            throw new InvalidRoomDetailException("room does not exist");
+        }
+        return room;
     }
 
     private List<Favorite>  addFavortieRoom(AnimalDto animalDto, Animal animal) throws InvalidRoomDetailException {
@@ -57,11 +79,10 @@ public class AnimalService {
                    favoriteRoom.setAnimal(animal);
                    Optional<Room> roomExist = roomRepository.findById(favoriteRoom.getRooms().getId());
                    if(roomExist.isEmpty())
-                       throw new InvalidRoomDetailException("this room does exist:"+favoriteRoom.getRooms().getTitle());
+                       throw new InvalidRoomDetailException("this favorite room does exist:"+favoriteRoom.getRooms().getTitle());
                    favoriteRoom.setRooms(roomExist.get());
             }
-            List<Favorite> favorites = favoriteRepository.saveAll(favoriteRooms);
-            return favorites;
+            return favoriteRepository.saveAll(favoriteRooms);
         }
         return null;
     }
@@ -86,21 +107,26 @@ public class AnimalService {
         return mapper.animalToAnimalDto(animal);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public AnimalDto updateAnimal(AnimalDto animalDto) throws InvalidRoomDetailException {
         Animal animal = mapper.animalDtoToAnimal(animalDto);
         animal = animalRepository.save(animal);
         log.debug("animal object saved:",animal);
         List<Favorite> favorite = addFavortieRoom(animalDto, animal);
+        if(animalDto.getRoomDto() != null) {
+            Room room = addAnimalToRoom(animal, animalDto);
+            animal.setRoom(room);
+            animal = animalRepository.save(animal);
+        }
         if(favorite != null)
           animal.setFavoriteRooms(new HashSet<>(favorite));
         return mapper.animalToAnimalDto(animal);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeAnimal(Long id) {
-        Optional<Favorite> favoriteRoom = favoriteRepository.findByAnimalId(id);
-        if(favoriteRoom.isPresent()) favoriteRepository.delete(favoriteRoom.get());
+        List<Favorite> favoriteRoom = favoriteRepository.findByAnimalId(id);
+        favoriteRepository.deleteAll(favoriteRoom);
         animalRepository.deleteById(id);
     }
 
@@ -129,98 +155,4 @@ public class AnimalService {
         List<Animal> animals = animalRepository.findByRoom(null, Sort.by(Sort.Direction.fromString(defaultType),parameter));
         return mapper.animalsToAnimalDtos(animals);
     }
-
-    /*@Transactional(readOnly = false)
-    public Animal add(Animal animal) throws InvalidRoomDetailException {
-
-        isValidAnimal(animal);
-        Animal savedAnimal = animalRepository.save(animal);
-        log.debug("animal object saved:",animal);
-        List<Favorite> favoriteRoom = addFavortieRoom(animal, savedAnimal);
-        if(favoriteRoom != null)
-            animal.setFavoriteRooms(new HashSet<>(favoriteRoom));
-        return animal;
-    }
-
-    private List<Favorite>  addFavortieRoom(Animal incomingAnimal, Animal savedAnimal) throws InvalidRoomDetailException {
-        Set<Favorite> favoriteRooms = incomingAnimal.getFavoriteRooms();
-        if(favoriteRooms  != null ){
-            for(Favorite favoriteRoom: favoriteRooms){
-                if(favoriteRoom != null && favoriteRoom.getRooms() != null) {
-                    favoriteRoom.setAnimal(savedAnimal);
-                    Optional<Room> roomExist = roomRepository.findById(favoriteRoom.getRooms().getId());
-                    if (roomExist.isEmpty())
-                        throw new InvalidRoomDetailException("this room does exist:" + favoriteRoom.getRooms().getTitle());
-                    favoriteRoom.setRooms(roomExist.get());
-                }
-            }
-            List<Favorite> favorites = favoriteRepository.saveAll(favoriteRooms);
-            return favorites;
-        }
-        return null;
-    }
-
-    private void isValidAnimal(Animal animal) throws InvalidRoomDetailException {
-        if(animal.getRoom() == null)
-            return;
-        Optional<Room> room = roomRepository.findById(animal.getRoom().getId());
-        if(room.isEmpty())
-            throw new InvalidRoomDetailException("Room does not exist");
-    }
-
-    @Transactional
-    public List<Animal> getAllAnimals() {
-        List<Animal> animals = animalRepository.findAll();
-        log.debug("total animals:",animals.size());
-        return animals;
-    }
-
-    public Animal getAnimalById(long id) {
-        Animal animal = animalRepository.getReferenceById(id);
-        return animal;
-    }
-
-    @Transactional(readOnly = false)
-    public Animal updateAnimal(Animal animal) throws InvalidRoomDetailException {
-        //Animal animal = mapper.animalDtoToAnimal(animalDto);
-        Animal savedAnimal = animalRepository.save(animal);
-        log.debug("animal object saved:",animal);
-        List<Favorite> favorite = addFavortieRoom(animal, savedAnimal);
-        if(favorite != null)
-            animal.setFavoriteRooms(new HashSet<>(favorite));
-        return animal;
-    }
-
-    @Transactional(readOnly = false)
-    public void removeAnimal(Long id) {
-        Optional<Favorite> favoriteRoom = favoriteRepository.findByAnimalId(id);
-        if(favoriteRoom.isPresent()) favoriteRepository.delete(favoriteRoom.get());
-        animalRepository.deleteById(id);
-    }
-
-    @Transactional(readOnly = false)
-    public Animal updateRoom(RoomDto roomDto, Long id) {
-        Animal animal= animalRepository.getReferenceById(id);
-        Room room = mapper.roomDtoToRoom(roomDto);
-        Animal a = updateAnimalRoom(room, animal);
-        return a;
-    }
-
-    private Animal updateAnimalRoom(Room room, Animal animal) {
-        animal.setRoom(room);
-        animal = animalRepository.save(animal);
-        return animal;
-    }
-
-    @Transactional(readOnly = false)
-    public Animal removeAnimalFromRoom(java.lang.Long id) {
-        Animal animal= animalRepository.getReferenceById(id);
-        Animal a = updateAnimalRoom(null, animal);
-        return a;
-    }
-
-    public List<Animal> findAnimalsWithoutRoom(String parameter, String defaultType) {
-        List<Animal> animals = animalRepository.findByRoom(null, Sort.by(Sort.Direction.fromString(defaultType),parameter));
-        return animals;
-    }*/
 }

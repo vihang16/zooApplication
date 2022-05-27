@@ -8,5 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
-    public List<Animal> findByRoom(Room room, Sort sort);
+     List<Animal> findByRoom(Room room, Sort sort);
+     List<Animal> findByRoom(Room room);
 }

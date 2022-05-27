@@ -1,5 +1,7 @@
 package com.self.zoo.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -20,8 +22,9 @@ public class RoomDto {
     @JsonManagedReference("favoriteRoom")
     @ToString.Exclude
     Set<FavoriteDto> favorites;
-    @JsonManagedReference("animalRoom")
+    //@JsonManagedReference("animalRoom")
     @ToString.Exclude
+    @JsonIgnore
     Set<AnimalDto> animals;
 
 }

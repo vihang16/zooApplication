@@ -48,20 +48,9 @@ public class AnimalController {
         animalService.removeAnimal(id);
     }
 
-    @PatchMapping("/room/{id}")
-    public AnimalDto updateRoom(@RequestBody RoomDto room, @PathVariable Long id){
-        return animalService.updateRoom(room, id);
-    }
 
-    @PatchMapping("/roomRemove/{id}")
-    public AnimalDto removeAnimalFromRoom(@PathVariable Long id){
-        return animalService.removeAnimalFromRoom(id);
-    }
-
-    @GetMapping("/noRoom/")
-    public List<AnimalDto> findAnimalsWithoutRoom(@RequestParam("parameter") String sortingParamter, @RequestParam("by") String by){
-        sortingParamter = sortingParamter == null? "title":sortingParamter;
-        by = by == null? "asc":by;
+    @GetMapping("/noRoom")
+    public List<AnimalDto> findAnimalsWithoutRoom(@RequestParam(value = "parameter",defaultValue = "title") String sortingParamter, @RequestParam(value = "by", defaultValue = "asc") String by){
         return animalService.findAnimalsWithoutRoom(sortingParamter, by);
     }
 

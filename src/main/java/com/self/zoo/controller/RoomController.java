@@ -25,13 +25,19 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public RoomDto retrieveRoom(@RequestParam Long id){
-         return roomService.getRoomDetails(id);
+    public RoomDto retrieveRoom( @PathVariable Long id, @RequestParam(value = "parameter", defaultValue = "title") String parameter, @RequestParam(value = "by", defaultValue = "asc") String by){
+         return roomService.getRoomDetails(id, parameter, by);
     }
 
-   /* public RoomDto updateRoom(@RequestBody RoomDto room,@RequestParam Long id){
+    @PutMapping("/update/{id}")
+   public RoomDto updateRoom(@RequestBody RoomDto room,@PathVariable Long id){
         room.setId(id);
         return roomService.updateRoom(room);
-    }*/
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteRoom(@PathVariable Long id){
+        roomService.deleteRoom(id);
+    }
 
 }
