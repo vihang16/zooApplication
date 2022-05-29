@@ -1,7 +1,6 @@
 package com.self.zoo.service;
 
 import com.self.zoo.dto.AnimalDto;
-import com.self.zoo.dto.FavoriteDto;
 import com.self.zoo.dto.RoomDto;
 import com.self.zoo.entity.Animal;
 import com.self.zoo.entity.Favorite;
@@ -13,7 +12,6 @@ import com.self.zoo.repository.FavoriteRepository;
 import com.self.zoo.repository.RoomRepository;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -74,10 +72,12 @@ public class AnimalService {
         if(favoriteRooms  != null ){
             for(Favorite favoriteRoom: favoriteRooms){
                    favoriteRoom.setAnimal(animal);
-                   Optional<Room> roomExist = roomRepository.findById(favoriteRoom.getRooms().getId());
-                   if(roomExist.isEmpty())
-                       throw new InvalidRoomDetailException("this favorite room does exist:"+favoriteRoom.getRooms().getTitle());
-                   favoriteRoom.setRooms(roomExist.get());
+                   if(favoriteRoom.getRooms() != null) {
+                       Optional<Room> roomExist = roomRepository.findById(favoriteRoom.getRooms().getId());
+                       if (roomExist.isEmpty())
+                           throw new InvalidRoomDetailException("this favorite room does exist:" + favoriteRoom.getRooms().getTitle());
+                       favoriteRoom.setRooms(roomExist.get());
+                   }
             }
             return favoriteRepository.saveAll(favoriteRooms);
         }
@@ -93,9 +93,9 @@ public class AnimalService {
     }
 
     @Transactional
-    public List<AnimalDto> getAllAnimals() {
-        List<Animal> animals = animalRepository.findAll();
-        log.debug("total animals:{}",animals.size());
+    public List<AnimalDto> getAllAnimals(String sortingParamter, String by) {
+        List<Animal> animals = animalRepository.findAll(Sort.by(Sort.Direction.fromString(by),sortingParamter));
+        log.info("total animals:{}",animals.size());
         return mapper.animalsToAnimalDtos(animals);
     }
 

@@ -27,13 +27,13 @@ public class AnimalController {
         return animalService.add(animalDto);
     }
 
-    @GetMapping
-    public List<AnimalDto> getAllAnimals(){
-        return  animalService.getAllAnimals();
+    @GetMapping("/all")
+    public List<AnimalDto> getAllAnimals(@RequestParam(value = "parameter",defaultValue = "title") String sortingParameter, @RequestParam(value = "by", defaultValue = "asc") String by){
+        return  animalService.getAllAnimals(sortingParameter, by);
     }
 
     @GetMapping("/{id}")
-    public AnimalDto getAnimalById(@PathVariable long id){
+    public AnimalDto getAnimalById(@PathVariable Long id){
         return animalService.getAnimalById(id);
     }
 
@@ -50,8 +50,8 @@ public class AnimalController {
 
 
     @GetMapping("/noRoom")
-    public List<AnimalDto> findAnimalsWithoutRoom(@RequestParam(value = "parameter",defaultValue = "title") String sortingParamter, @RequestParam(value = "by", defaultValue = "asc") String by){
-        return animalService.findAnimalsWithoutRoom(sortingParamter, by);
+    public List<AnimalDto> findAnimalsWithoutRoom(@RequestParam(value = "parameter",defaultValue = "title") String sortingParameter, @RequestParam(value = "by", defaultValue = "asc") String by){
+        return animalService.findAnimalsWithoutRoom(sortingParameter, by);
     }
 
     @GetMapping("/favorite/{id}")
