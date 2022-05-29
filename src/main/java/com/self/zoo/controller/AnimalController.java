@@ -54,6 +54,11 @@ public class AnimalController {
         return animalService.findAnimalsWithoutRoom(sortingParamter, by);
     }
 
+    @GetMapping("/favorite/{id}")
+    public List<RoomDto> findFavoriteRoomsForAnimal(@PathVariable Long id){
+        return animalService.findFavoriteRoomForAnimal(id);
+    }
+
 
 
 }

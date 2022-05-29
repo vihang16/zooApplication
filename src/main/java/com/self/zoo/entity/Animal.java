@@ -20,8 +20,8 @@ import java.util.Set;
 public class Animal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_animal_id")
-    @SequenceGenerator(name = "seq_animal_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //generator = "seq_animal_id"
+    //@SequenceGenerator(name = "seq_animal_id")
     Long id;
 
     @NotEmpty(message = "title should be given")

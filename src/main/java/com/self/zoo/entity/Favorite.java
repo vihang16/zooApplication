@@ -16,8 +16,8 @@ import javax.persistence.*;
 public class Favorite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_fav_id")
-    @SequenceGenerator(name = "seq_fav_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //generator = "seq_fav_id"
+    //@SequenceGenerator(name = "seq_fav_id")
     Long id;
 
     @ManyToOne

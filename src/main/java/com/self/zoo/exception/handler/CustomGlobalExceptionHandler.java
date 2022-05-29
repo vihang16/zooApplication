@@ -1,6 +1,7 @@
 package com.self.zoo.exception.handler;
 
 import com.self.zoo.exception.custom.InvalidRoomDetailException;
+import org.apache.catalina.filters.ExpiresFilter;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class CustomGlobalExceptionHandler {
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ResponseEntity<String> constrainViolationHandler(ConstraintViolationException ex, HttpServletResponse response){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<String> illegalArumentHandler(IllegalArgumentException ex, HttpServletResponse response){
+        return new ResponseEntity<>("seems like there is no data", HttpStatus.NO_CONTENT);
     }
 
 }

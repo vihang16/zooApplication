@@ -40,9 +40,7 @@ public interface SourceToDestinationMapper {
         return favorite1;
     }
 
-  /*  @AfterMapping
-    default void afterMappingAnimalDtoTOAnimal(@MappingTarget Animal animal, AnimalDto animalDto){
-        animal.setRoom(roomDtoToRoom(animalDto.getRoomDto()));
-    }*/
+    List<RoomDto> roomsToRoomDto(List<Room> rooms);
+
 
 }

@@ -1,5 +1,6 @@
 package com.self.zoo.controller;
 
+import com.self.zoo.dto.AnimalDto;
 import com.self.zoo.dto.RoomDto;
 import com.self.zoo.service.RoomService;
 import lombok.AccessLevel;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -38,6 +40,11 @@ public class RoomController {
     @DeleteMapping("/delete/{id}")
     public void deleteRoom(@PathVariable Long id){
         roomService.deleteRoom(id);
+    }
+
+    @GetMapping("/animals/{id}")
+    public List<AnimalDto> getAllAnimalsInRoom(@PathVariable Long id, @RequestParam(value = "parameter", defaultValue = "title") String parameter, @RequestParam(value = "by", defaultValue = "asc") String by){
+        return roomService.getAllAnimalsInRoom(id, parameter, by);
     }
 
 }

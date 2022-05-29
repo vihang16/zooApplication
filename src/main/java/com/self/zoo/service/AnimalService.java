@@ -20,10 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -43,7 +40,7 @@ public class AnimalService {
         Animal animal = mapper.animalDtoToAnimal(animalDto);
         isValidAnimal(animal);
         animal = animalRepository.save(animal);
-        log.debug("animal object saved:",animal);
+        log.debug("animal object saved:{}",animal);
         List<Favorite> favoriteRoom = addFavortieRoom(animalDto, animal);
         if(animalDto.getRoomDto() != null) {
             Room room = addAnimalToRoom(animal, animalDto);
@@ -98,7 +95,7 @@ public class AnimalService {
     @Transactional
     public List<AnimalDto> getAllAnimals() {
         List<Animal> animals = animalRepository.findAll();
-        log.debug("total animals:",animals.size());
+        log.debug("total animals:{}",animals.size());
         return mapper.animalsToAnimalDtos(animals);
     }
 
@@ -111,7 +108,7 @@ public class AnimalService {
     public AnimalDto updateAnimal(AnimalDto animalDto) throws InvalidRoomDetailException {
         Animal animal = mapper.animalDtoToAnimal(animalDto);
         animal = animalRepository.save(animal);
-        log.debug("animal object saved:",animal);
+        log.debug("animal object saved:{}",animal);
         List<Favorite> favorite = addFavortieRoom(animalDto, animal);
         if(animalDto.getRoomDto() != null) {
             Room room = addAnimalToRoom(animal, animalDto);
@@ -130,7 +127,7 @@ public class AnimalService {
         animalRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public AnimalDto updateRoom(RoomDto roomDto, Long id) {
         Animal animal= animalRepository.getReferenceById(id);
         Room room = mapper.roomDtoToRoom(roomDto);
@@ -144,15 +141,24 @@ public class AnimalService {
         return animal;
     }
 
-    @Transactional(readOnly = false)
+   /* @Transactional
     public AnimalDto removeAnimalFromRoom(java.lang.Long id) {
         Animal animal= animalRepository.getReferenceById(id);
         Animal a = updateAnimalRoom(null, animal);
         return mapper.animalToAnimalDto(a);
-    }
+    }*/
 
     public List<AnimalDto> findAnimalsWithoutRoom(String parameter, String defaultType) {
         List<Animal> animals = animalRepository.findByRoom(null, Sort.by(Sort.Direction.fromString(defaultType),parameter));
         return mapper.animalsToAnimalDtos(animals);
+    }
+
+    public List<RoomDto> findFavoriteRoomForAnimal(Long id) {
+        List<Favorite> favoriteRooms = favoriteRepository.findByAnimalId(id);
+        List<Room> rooms = new ArrayList<>();
+        for(Favorite favorite: favoriteRooms){
+            rooms.add(roomRepository.findById(favorite.getRooms().getId()).get());
+        }
+        return mapper.roomsToRoomDto(rooms);
     }
 }

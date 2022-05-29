@@ -1,5 +1,6 @@
 package com.self.zoo.service;
 
+import com.self.zoo.dto.AnimalDto;
 import com.self.zoo.dto.RoomDto;
 import com.self.zoo.entity.Animal;
 import com.self.zoo.entity.Favorite;
@@ -33,13 +34,13 @@ public class RoomService {
     public RoomDto addRoom(RoomDto roomDto) {
         Room room = mapper.roomDtoToRoom(roomDto);
         room = roomRepository.save(room);
-        log.debug("room saved:",room);
+        log.debug("room saved:{}",room);
         return mapper.roomToRoomDto(room);
     }
 
     public RoomDto getRoomDetails(Long id, String parameter, String by) {
-        Room room = roomRepository.getReferenceById(id);
-        List<Animal> animals = animalRepository.findByRoom(room, Sort.by(Sort.Direction.fromString(parameter),by));
+        Room room = roomRepository.findById(id).get();
+        List<Animal> animals = animalRepository.findByRoom(room, Sort.by(Sort.Direction.fromString(by),parameter));
         room.setAnimals(new HashSet<>(animals));
         return mapper.roomToRoomDto(room);
     }
@@ -74,5 +75,11 @@ public class RoomService {
             animalRepository.save(animal);
         }
         log.info("animal updated successfully");
+    }
+
+    public List<AnimalDto> getAllAnimalsInRoom(Long id, String parameter, String by) {
+        Room room = roomRepository.findById(id).get();
+        List<Animal> animals = animalRepository.findByRoom(room, Sort.by(Sort.Direction.fromString(by),parameter));
+        return mapper.animalsToAnimalDtos(animals);
     }
 }

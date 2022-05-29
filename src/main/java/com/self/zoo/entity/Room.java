@@ -18,8 +18,8 @@ import java.util.Set;
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_room_id")
-    @SequenceGenerator(name = "seq_room_id",allocationSize = 1, initialValue = 3)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // generator = "seq_room_id"
+    //@SequenceGenerator(name = "seq_room_id",allocationSize = 1, initialValue = 3)
     Long id;
 
     String title;
