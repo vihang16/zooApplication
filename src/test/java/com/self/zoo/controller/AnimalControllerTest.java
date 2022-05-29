@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.self.zoo.dto.AnimalDto;
 import com.self.zoo.dto.FavoriteDto;
 import com.self.zoo.dto.RoomDto;
+import com.self.zoo.exception.custom.InvalidRoomDetailException;
 import com.self.zoo.service.AnimalService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,13 +22,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.CoreMatchers.is;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(AnimalController.class)
@@ -108,30 +113,43 @@ class AnimalControllerTest {
         }
     }
 
-
-
     @Test
-    void getAllAnimals() {
+    void getAllAnimals() throws Exception {
+        AnimalDto animalDto = createAnimalDtoObject();
+        when(animalService.getAllAnimals(any(), any())).thenReturn(new ArrayList<>(Arrays.asList(animalDto)));
+        mvc.perform(MockMvcRequestBuilders
+                .get("/animal/all")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].title",is("dog")));
     }
 
     @Test
-    void getAnimalById() {
+    void getAnimalById() throws Exception {
+        AnimalDto animalDto = createAnimalDtoObject();
+        when(animalService.getAnimalById(anyLong())).thenReturn(animalDto);
+        mvc.perform(MockMvcRequestBuilders
+                   .get("/animal/1")
+                   .accept(MediaType.APPLICATION_JSON))
+                   .andExpect(jsonPath("$.title",is("dog")));
     }
 
     @Test
-    void updateAnimal() {
+    void updateAnimal() throws Exception {
+        AnimalDto animalDto = createAnimalDtoObject();
+        AnimalDto updateAnimal = createAnimalDtoObject();
+        updateAnimal.setTitle("someoneElse");
+        when(animalService.updateAnimal(any())).thenReturn(updateAnimal);
+        mvc.perform(MockMvcRequestBuilders
+                .put("/animal/1")
+                .content(asJsonString(animalDto))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title", is("someoneElse")));
     }
 
     @Test
     void removeAnimal() {
-    }
-
-    @Test
-    void updateRoom() {
-    }
-
-    @Test
-    void removeAnimalFromRoom() {
     }
 
     @Test
