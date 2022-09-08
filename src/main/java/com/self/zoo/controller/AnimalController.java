@@ -2,7 +2,6 @@ package com.self.zoo.controller;
 
 import com.self.zoo.dto.AnimalDto;
 import com.self.zoo.dto.RoomDto;
-import com.self.zoo.entity.Animal;
 import com.self.zoo.exception.custom.InvalidRoomDetailException;
 import com.self.zoo.service.AnimalService;
 import lombok.AccessLevel;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -24,6 +22,7 @@ public class AnimalController {
 
     @PostMapping("/add")
     public AnimalDto addAnimal(@Valid @RequestBody AnimalDto animalDto) throws InvalidRoomDetailException {
+
         return animalService.add(animalDto);
     }
 

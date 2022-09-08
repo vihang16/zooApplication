@@ -27,6 +27,7 @@ public class Animal {
     @NotEmpty(message = "title should be given")
     String title;
 
+    @Column(updatable = false)
     @CreatedDate
     LocalDateTime located;
 
@@ -44,4 +45,5 @@ public class Animal {
     @JsonIgnore
     //@JsonBackReference(value = "animals")
     Room room;
+
 }
